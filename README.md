@@ -10,7 +10,7 @@ The RollbackSynchronizer also breaks for clients, seemingly simulating faster th
 
 
 Example 1 (no ping):
-<video src="/no_ping.webm" width="320" height="240" controls></video>
+[no_ping.webm](https://github.com/user-attachments/assets/bbb1f080-dd8d-4664-90b9-d804e0ae7411)
 
 Example 2 (100ms ping using Clumsy):
-<video src="/100ms_ping.webm" width="320" height="240" controls></video>
+[100ms_ping.webm](https://github.com/user-attachments/assets/2700149e-89eb-4e35-b889-2f1550fc7537)
