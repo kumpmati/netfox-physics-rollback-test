@@ -1,0 +1,145 @@
+[gd_scene load_steps=17 format=3 uid="uid://d2ykbq7j13omc"]
+
+[ext_resource type="Script" uid="uid://ykp3fu70oir" path="res://addons/netfox.extras/physics/godot_driver_3d.gd" id="1_2q6dc"]
+[ext_resource type="Script" uid="uid://dn2q1bo4eysm2" path="res://scripts/level.gd" id="1_mx8sn"]
+[ext_resource type="Script" uid="uid://dofo8gmd8io63" path="res://scripts/ball.gd" id="2_mx8sn"]
+[ext_resource type="Script" uid="uid://bklxcdyxgbjg2" path="res://addons/netfox.extras/physics/network-rigid-body-3d.gd" id="2_w7c3h"]
+[ext_resource type="Script" uid="uid://3lbngqcexe0l" path="res://addons/netfox/state-synchronizer.gd" id="3_w8frs"]
+[ext_resource type="Script" uid="uid://dour8fehaaugp" path="res://addons/netfox/tick-interpolator.gd" id="5_2r41h"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_2q6dc"]
+
+[sub_resource type="Sky" id="Sky_2q6dc"]
+sky_material = SubResource("ProceduralSkyMaterial_2q6dc")
+
+[sub_resource type="Environment" id="Environment_2q6dc"]
+background_mode = 2
+sky = SubResource("Sky_2q6dc")
+ambient_light_source = 3
+reflected_light_source = 2
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_w7c3h"]
+friction = 0.67
+bounce = 0.95
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_w7c3h"]
+
+[sub_resource type="Gradient" id="Gradient_w7c3h"]
+offsets = PackedFloat32Array(0.185484, 0.262097)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_w8frs"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_mx8sn"]
+color_ramp = SubResource("Gradient_w7c3h")
+noise = SubResource("FastNoiseLite_w8frs")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ppgk2"]
+albedo_texture = SubResource("NoiseTexture2D_mx8sn")
+
+[sub_resource type="SphereMesh" id="SphereMesh_w7c3h"]
+material = SubResource("StandardMaterial3D_ppgk2")
+
+[node name="Level" type="Node3D"]
+script = ExtResource("1_mx8sn")
+
+[node name="PhysicsDriver3D" type="Node" parent="."]
+script = ExtResource("1_2q6dc")
+metadata/_custom_type_script = "uid://ykp3fu70oir"
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("uid://d3a88k0p6i2jw")
+spawn_path = NodePath("..")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.778153, -0.612772, 0.137802, 0.064033, 0.295661, 0.953144, -0.624803, -0.732868, 0.269307, 0, 11.3441, 0)
+shadow_enabled = true
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.492864, 0.870106, 0, -0.870106, 0.492864, 0, 15, 5.33203)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_2q6dc")
+
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="."]
+use_collision = true
+
+[node name="CSGBox3D" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.856628, 3.49203, -0.89679)
+size = Vector3(19.3541, 7.23627, 15.8676)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.856628, 5.03883, -0.89679)
+operation = 2
+size = Vector3(17.9883, 8.3541, 14.7991)
+
+[node name="NetworkRigidBody3D" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.92698, 7.53205, 0)
+physics_material_override = SubResource("PhysicsMaterial_w7c3h")
+script = ExtResource("2_mx8sn")
+metadata/_custom_type_script = "uid://bklxcdyxgbjg2"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="NetworkRigidBody3D"]
+shape = SubResource("SphereShape3D_w7c3h")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="NetworkRigidBody3D"]
+mesh = SubResource("SphereMesh_w7c3h")
+
+[node name="StateSynchronizer" type="Node" parent="NetworkRigidBody3D" node_paths=PackedStringArray("root")]
+script = ExtResource("3_w8frs")
+root = NodePath("..")
+properties = Array[String]([":physics_state"])
+metadata/_custom_type_script = "uid://3lbngqcexe0l"
+
+[node name="TickInterpolator" type="Node" parent="NetworkRigidBody3D" node_paths=PackedStringArray("root")]
+script = ExtResource("5_2r41h")
+root = NodePath("..")
+properties = Array[String]([":global_transform"])
+metadata/_custom_type_script = "uid://dour8fehaaugp"
+
+[node name="NetworkRigidBody3D3" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.3999, 17.9389, 0)
+physics_material_override = SubResource("PhysicsMaterial_w7c3h")
+script = ExtResource("2_mx8sn")
+metadata/_custom_type_script = "uid://bklxcdyxgbjg2"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="NetworkRigidBody3D3"]
+shape = SubResource("SphereShape3D_w7c3h")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="NetworkRigidBody3D3"]
+mesh = SubResource("SphereMesh_w7c3h")
+
+[node name="StateSynchronizer" type="Node" parent="NetworkRigidBody3D3" node_paths=PackedStringArray("root")]
+script = ExtResource("3_w8frs")
+root = NodePath("..")
+properties = Array[String]([":physics_state"])
+metadata/_custom_type_script = "uid://3lbngqcexe0l"
+
+[node name="TickInterpolator" type="Node" parent="NetworkRigidBody3D3" node_paths=PackedStringArray("root")]
+script = ExtResource("5_2r41h")
+root = NodePath("..")
+properties = Array[String]([":global_transform"])
+metadata/_custom_type_script = "uid://dour8fehaaugp"
+
+[node name="NetworkRigidBody3D2" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.65118, 8.92877, -0.193553)
+physics_material_override = SubResource("PhysicsMaterial_w7c3h")
+script = ExtResource("2_w7c3h")
+metadata/_custom_type_script = "uid://bklxcdyxgbjg2"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="NetworkRigidBody3D2"]
+shape = SubResource("SphereShape3D_w7c3h")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="NetworkRigidBody3D2"]
+mesh = SubResource("SphereMesh_w7c3h")
+
+[node name="StateSynchronizer" type="Node" parent="NetworkRigidBody3D2" node_paths=PackedStringArray("root")]
+script = ExtResource("3_w8frs")
+root = NodePath("..")
+properties = Array[String]([":physics_state"])
+metadata/_custom_type_script = "uid://3lbngqcexe0l"
+
+[node name="TickInterpolator" type="Node" parent="NetworkRigidBody3D2" node_paths=PackedStringArray("root")]
+script = ExtResource("5_2r41h")
+root = NodePath("..")
+properties = Array[String]([":global_transform"])
+metadata/_custom_type_script = "uid://dour8fehaaugp"
