@@ -1,16 +1,15 @@
 # Physics rollback issue example
 
-How to reproduce issue:
+When using NetworkRigidBody3D (synced using `StateSynchronizer`) without a `RollbackSynchronizer` present in the scene tree, all seems to work fine.
 
-1. Run project and press 'Start' in the menu
-2. Observe the speed of the bouncing balls before the players (red cubes) are spawned in
-3. After 5 seconds the players are spawned, each containing a RollbackSynchronizer
-4. The physics simulation speed now increases proportional to how many players there are.
-The RollbackSynchronizer also breaks for clients, seemingly simulating faster than they are supposed to.
+After a node using `RollbackSynchronizer` is spawned, the simulation speed increases. The speed increase seems to be proportional to the amount of RollbackSynchronizer nodes, meaning more players = more speedup.
+
+This also breaks the RollbackSynchronizer logic for the clients somehow, as shown in the videos below.
 
 
-Example 1 (no ping):
+Left window is client, right window is server:
+
 [no_ping.webm](https://github.com/user-attachments/assets/bbb1f080-dd8d-4664-90b9-d804e0ae7411)
 
-Example 2 (100ms ping using Clumsy):
+
 [100ms_ping.webm](https://github.com/user-attachments/assets/2700149e-89eb-4e35-b889-2f1550fc7537)
