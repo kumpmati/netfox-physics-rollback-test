@@ -3,7 +3,6 @@
 [ext_resource type="Script" uid="uid://ykp3fu70oir" path="res://addons/netfox.extras/physics/godot_driver_3d.gd" id="1_2q6dc"]
 [ext_resource type="Script" uid="uid://dn2q1bo4eysm2" path="res://scripts/level.gd" id="1_mx8sn"]
 [ext_resource type="Script" uid="uid://dofo8gmd8io63" path="res://scripts/ball.gd" id="2_mx8sn"]
-[ext_resource type="Script" uid="uid://bklxcdyxgbjg2" path="res://addons/netfox.extras/physics/network-rigid-body-3d.gd" id="2_w7c3h"]
 [ext_resource type="Script" uid="uid://3lbngqcexe0l" path="res://addons/netfox/state-synchronizer.gd" id="3_w8frs"]
 [ext_resource type="Script" uid="uid://dour8fehaaugp" path="res://addons/netfox/tick-interpolator.gd" id="5_2r41h"]
 
@@ -17,6 +16,10 @@ background_mode = 2
 sky = SubResource("Sky_2q6dc")
 ambient_light_source = 3
 reflected_light_source = 2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2r41h"]
+transparency = 1
+albedo_color = Color(1, 1, 1, 0.0313726)
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_w7c3h"]
 friction = 0.67
@@ -63,82 +66,48 @@ environment = SubResource("Environment_2q6dc")
 [node name="CSGCombiner3D" type="CSGCombiner3D" parent="."]
 use_collision = true
 
+[node name="CSGBox3D4" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.856628, 7.10148, -0.89679)
+size = Vector3(19.3541, 14.4552, 15.8676)
+material = SubResource("StandardMaterial3D_2r41h")
+
 [node name="CSGBox3D" type="CSGBox3D" parent="CSGCombiner3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.856628, 3.49203, -0.89679)
 size = Vector3(19.3541, 7.23627, 15.8676)
 
 [node name="CSGBox3D2" type="CSGBox3D" parent="CSGCombiner3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.856628, 5.03883, -0.89679)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.856628, 6.86178, -0.89679)
 operation = 2
-size = Vector3(17.9883, 8.3541, 14.7991)
+size = Vector3(17.9883, 12, 14.7991)
 
-[node name="NetworkRigidBody3D" type="RigidBody3D" parent="."]
+[node name="CSGBox3D3" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(0.889987, -0.274833, -0.363853, 0.295058, 0.955479, 0, 0.347654, -0.107358, 0.931456, 6.17196, 0.757277, 4.15174)
+size = Vector3(9.64062, 4.06628, 12.8297)
+
+[node name="CSGBox3D5" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(-0.798882, 0.152631, 0.581801, 0.24049, 0.967643, 0.0763666, -0.551319, 0.200925, -0.809738, -8.54846, 0.305751, -5.3046)
+size = Vector3(9.64062, 4.06628, 12.8297)
+
+[node name="RBThing" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.92698, 7.53205, 0)
 physics_material_override = SubResource("PhysicsMaterial_w7c3h")
+continuous_cd = true
 script = ExtResource("2_mx8sn")
 metadata/_custom_type_script = "uid://bklxcdyxgbjg2"
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="NetworkRigidBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RBThing"]
 shape = SubResource("SphereShape3D_w7c3h")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="NetworkRigidBody3D"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="RBThing"]
 mesh = SubResource("SphereMesh_w7c3h")
 
-[node name="StateSynchronizer" type="Node" parent="NetworkRigidBody3D" node_paths=PackedStringArray("root")]
+[node name="StateSynchronizer" type="Node" parent="RBThing" node_paths=PackedStringArray("root")]
 script = ExtResource("3_w8frs")
 root = NodePath("..")
 properties = Array[String]([":physics_state"])
 metadata/_custom_type_script = "uid://3lbngqcexe0l"
 
-[node name="TickInterpolator" type="Node" parent="NetworkRigidBody3D" node_paths=PackedStringArray("root")]
-script = ExtResource("5_2r41h")
-root = NodePath("..")
-properties = Array[String]([":global_transform"])
-metadata/_custom_type_script = "uid://dour8fehaaugp"
-
-[node name="NetworkRigidBody3D3" type="RigidBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.3999, 17.9389, 0)
-physics_material_override = SubResource("PhysicsMaterial_w7c3h")
-script = ExtResource("2_mx8sn")
-metadata/_custom_type_script = "uid://bklxcdyxgbjg2"
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="NetworkRigidBody3D3"]
-shape = SubResource("SphereShape3D_w7c3h")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="NetworkRigidBody3D3"]
-mesh = SubResource("SphereMesh_w7c3h")
-
-[node name="StateSynchronizer" type="Node" parent="NetworkRigidBody3D3" node_paths=PackedStringArray("root")]
-script = ExtResource("3_w8frs")
-root = NodePath("..")
-properties = Array[String]([":physics_state"])
-metadata/_custom_type_script = "uid://3lbngqcexe0l"
-
-[node name="TickInterpolator" type="Node" parent="NetworkRigidBody3D3" node_paths=PackedStringArray("root")]
-script = ExtResource("5_2r41h")
-root = NodePath("..")
-properties = Array[String]([":global_transform"])
-metadata/_custom_type_script = "uid://dour8fehaaugp"
-
-[node name="NetworkRigidBody3D2" type="RigidBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.65118, 8.92877, -0.193553)
-physics_material_override = SubResource("PhysicsMaterial_w7c3h")
-script = ExtResource("2_w7c3h")
-metadata/_custom_type_script = "uid://bklxcdyxgbjg2"
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="NetworkRigidBody3D2"]
-shape = SubResource("SphereShape3D_w7c3h")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="NetworkRigidBody3D2"]
-mesh = SubResource("SphereMesh_w7c3h")
-
-[node name="StateSynchronizer" type="Node" parent="NetworkRigidBody3D2" node_paths=PackedStringArray("root")]
-script = ExtResource("3_w8frs")
-root = NodePath("..")
-properties = Array[String]([":physics_state"])
-metadata/_custom_type_script = "uid://3lbngqcexe0l"
-
-[node name="TickInterpolator" type="Node" parent="NetworkRigidBody3D2" node_paths=PackedStringArray("root")]
+[node name="TickInterpolator" type="Node" parent="RBThing" node_paths=PackedStringArray("root")]
 script = ExtResource("5_2r41h")
 root = NodePath("..")
 properties = Array[String]([":global_transform"])
