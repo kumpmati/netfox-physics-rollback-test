@@ -14,7 +14,6 @@ albedo_color = Color(0.758769, 0.0107261, 4.81307e-07, 1)
 material = SubResource("StandardMaterial3D_u8vuu")
 
 [node name="Player" type="CharacterBody3D"]
-collision_mask = 5
 script = ExtResource("1_oul6g")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
@@ -29,7 +28,7 @@ script = ExtResource("2_g2els")
 [node name="RollbackSynchronizer" type="Node" parent="." node_paths=PackedStringArray("root")]
 script = ExtResource("4_yw30f")
 root = NodePath("..")
-state_properties = Array[String]([":global_transform"])
+state_properties = Array[String]([":global_transform", ":velocity"])
 input_properties = Array[String](["Input:move_wish_dir"])
 enable_input_broadcast = false
 metadata/_custom_type_script = "uid://d350u8evihs1u"
