@@ -1,0 +1,57 @@
+[gd_scene load_steps=12 format=3 uid="uid://b7i2xiyyekkdc"]
+
+[ext_resource type="Script" uid="uid://dofo8gmd8io63" path="res://scripts/ball.gd" id="1_4dx81"]
+[ext_resource type="Script" uid="uid://d350u8evihs1u" path="res://addons/netfox/rollback/rollback-synchronizer.gd" id="2_eew57"]
+[ext_resource type="Script" uid="uid://dour8fehaaugp" path="res://addons/netfox/tick-interpolator.gd" id="3_jj7gd"]
+[ext_resource type="Script" uid="uid://chr4omg2hy3yu" path="res://addons/netfox/rewindable-action.gd" id="4_fwo8l"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_w7c3h"]
+friction = 0.67
+bounce = 0.7
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_w7c3h"]
+
+[sub_resource type="Gradient" id="Gradient_w7c3h"]
+offsets = PackedFloat32Array(0.185484, 0.262097)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_w8frs"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_mx8sn"]
+color_ramp = SubResource("Gradient_w7c3h")
+noise = SubResource("FastNoiseLite_w8frs")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ppgk2"]
+albedo_texture = SubResource("NoiseTexture2D_mx8sn")
+
+[sub_resource type="SphereMesh" id="SphereMesh_w7c3h"]
+material = SubResource("StandardMaterial3D_ppgk2")
+
+[node name="Ball" type="RigidBody3D"]
+physics_material_override = SubResource("PhysicsMaterial_w7c3h")
+continuous_cd = true
+script = ExtResource("1_4dx81")
+metadata/_custom_type_script = "uid://bklxcdyxgbjg2"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_w7c3h")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_w7c3h")
+
+[node name="RollbackSynchronizer" type="Node" parent="." node_paths=PackedStringArray("root")]
+script = ExtResource("2_eew57")
+root = NodePath("..")
+enable_prediction = true
+state_properties = Array[String]([":physics_state"])
+enable_input_broadcast = false
+metadata/_custom_type_script = "uid://d350u8evihs1u"
+
+[node name="TickInterpolator" type="Node" parent="." node_paths=PackedStringArray("root")]
+script = ExtResource("3_jj7gd")
+root = NodePath("..")
+properties = Array[String]([":global_transform"])
+metadata/_custom_type_script = "uid://dour8fehaaugp"
+
+[node name="RewindableAction" type="Node" parent="."]
+script = ExtResource("4_fwo8l")
+metadata/_custom_type_script = "uid://chr4omg2hy3yu"
