@@ -1,0 +1,41 @@
+[gd_scene load_steps=8 format=3 uid="uid://d3a88k0p6i2jw"]
+
+[ext_resource type="Script" uid="uid://3uqupwkdqlcb" path="res://scripts/player_3d.gd" id="1_4jfb6"]
+[ext_resource type="Script" uid="uid://bl2v4d0tptlrw" path="res://scripts/player-input.gd" id="2_yevqy"]
+[ext_resource type="Script" uid="uid://d350u8evihs1u" path="res://addons/netfox/rollback/rollback-synchronizer.gd" id="3_sxlqi"]
+[ext_resource type="Script" uid="uid://dour8fehaaugp" path="res://addons/netfox/tick-interpolator.gd" id="4_460ac"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_u8vuu"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_u8vuu"]
+albedo_color = Color(0.758769, 0.0107261, 4.81307e-07, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_u8vuu"]
+material = SubResource("StandardMaterial3D_u8vuu")
+
+[node name="Player3D" type="CharacterBody3D"]
+process_mode = 3
+script = ExtResource("1_4jfb6")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_u8vuu")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_u8vuu")
+
+[node name="Input" type="Node" parent="."]
+script = ExtResource("2_yevqy")
+
+[node name="RollbackSynchronizer" type="Node" parent="." node_paths=PackedStringArray("root")]
+script = ExtResource("3_sxlqi")
+root = NodePath("..")
+state_properties = Array[String]([":global_transform", ":velocity"])
+input_properties = Array[String](["Input:move_wish_dir"])
+enable_input_broadcast = false
+metadata/_custom_type_script = "uid://d350u8evihs1u"
+
+[node name="TickInterpolator" type="Node" parent="." node_paths=PackedStringArray("root")]
+script = ExtResource("4_460ac")
+root = NodePath("..")
+properties = Array[String]([":global_transform"])
+metadata/_custom_type_script = "uid://dour8fehaaugp"

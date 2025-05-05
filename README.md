@@ -1,9 +1,19 @@
-# Physics rollback issue example
+# Physics rollback test
 
-When using NetworkRigidBody3D (synced using `StateSynchronizer`) without a `RollbackSynchronizer` present in the scene tree, all seems to work fine.
+By default this project has Rapier 3D + 2D enabled,
+but you can change the physics engine to test Jolt and Godot physics.
 
-After a node using `RollbackSynchronizer` is spawned, the simulation speed increases. The speed increase seems to be proportional to the amount of RollbackSynchronizer nodes, meaning more players = more speedup.
+## Getting started
+1. Debug -> Customize run instances -> Enable multiple instances
+2. Debug -> Turn on Visible collision shapes
 
-Left window is client, right window is server:
+When a `RigidBody` or `CharacterBody` enters or exits the green area,
+it should print a line in the output panel.
 
-[issue.webm](https://github.com/user-attachments/assets/bbb1f080-dd8d-4664-90b9-d804e0ae7411)
+## Known issues:
+- CharacterBody collisions break when using Rapier physics and `rollback_space` is true
+	- area doesn't register signals
+	- players go through each other
+- The following changes need to be applied to physics rollback to work (already applied in this project)
+	- https://github.com/foxssake/netfox/pull/437#pullrequestreview-2801259392
+	- https://github.com/foxssake/netfox/pull/437#discussion_r2073769842

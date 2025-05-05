@@ -1,0 +1,135 @@
+[gd_scene load_steps=19 format=3 uid="uid://d2ykbq7j13omc"]
+
+[ext_resource type="Script" uid="uid://dn2q1bo4eysm2" path="res://scripts/level_3d.gd" id="1_dv5sy"]
+[ext_resource type="Script" uid="uid://bo4lplbeepibj" path="res://addons/netfox.extras/physics/rapier_driver_3d.gd" id="2_dv5sy"]
+[ext_resource type="Script" uid="uid://dofo8gmd8io63" path="res://scripts/ball.gd" id="3_rsk3g"]
+[ext_resource type="Script" uid="uid://d350u8evihs1u" path="res://addons/netfox/rollback/rollback-synchronizer.gd" id="4_0352p"]
+[ext_resource type="Script" uid="uid://dour8fehaaugp" path="res://addons/netfox/tick-interpolator.gd" id="5_1f0us"]
+[ext_resource type="Script" uid="uid://dki86bwoc4t5k" path="res://scripts/network_area3d.gd" id="6_qubst"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_2q6dc"]
+
+[sub_resource type="Sky" id="Sky_2q6dc"]
+sky_material = SubResource("ProceduralSkyMaterial_2q6dc")
+
+[sub_resource type="Environment" id="Environment_2q6dc"]
+background_mode = 2
+sky = SubResource("Sky_2q6dc")
+ambient_light_source = 3
+reflected_light_source = 2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2r41h"]
+transparency = 1
+albedo_color = Color(1, 1, 1, 0.0313726)
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_w8frs"]
+friction = 0.88
+bounce = 0.53
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_w8frs"]
+
+[sub_resource type="Gradient" id="Gradient_w8frs"]
+offsets = PackedFloat32Array(0.429224, 0.479452)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_mx8sn"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_ppgk2"]
+color_ramp = SubResource("Gradient_w8frs")
+noise = SubResource("FastNoiseLite_mx8sn")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_klq6b"]
+albedo_texture = SubResource("NoiseTexture2D_ppgk2")
+
+[sub_resource type="SphereMesh" id="SphereMesh_w8frs"]
+material = SubResource("StandardMaterial3D_klq6b")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_2r41h"]
+size = Vector3(5.62113, 4.05408, 11.4188)
+
+[node name="Level" type="Node3D"]
+script = ExtResource("1_dv5sy")
+
+[node name="RapierDriver3D" type="Node" parent="."]
+script = ExtResource("2_dv5sy")
+
+[node name="Label" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("uid://d3a88k0p6i2jw")
+spawn_path = NodePath("..")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.778153, -0.612772, 0.137802, 0.064033, 0.295661, 0.953144, -0.624803, -0.732868, 0.269307, 0, 11.3441, 0)
+shadow_enabled = true
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.997627, -0.00621594, 0.0685739, -0.0597305, 0.417313, 0.906798, -0.0342534, -0.908742, 0.415951, 0.885664, 20.1541, 5.67164)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_2q6dc")
+
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="."]
+use_collision = true
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.856628, 7.10148, -0.89679)
+size = Vector3(19.3541, 14.4552, 15.8676)
+material = SubResource("StandardMaterial3D_2r41h")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.856628, 3.49203, -0.89679)
+size = Vector3(19.3541, 7.23627, 15.8676)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.856628, 6.86178, -0.89679)
+operation = 2
+size = Vector3(17.9883, 12, 14.7991)
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(0.889987, -0.274833, -0.363853, 0.295058, 0.955479, 0, 0.347654, -0.107358, 0.931456, 9.62545, 0.757277, 4.15174)
+size = Vector3(9.64062, 4.06628, 12.8297)
+
+[node name="CSGBox3D5" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(-0.754377, 0.343749, 0.559243, 0.422804, 0.906123, 0.0133646, -0.502148, 0.246532, -0.828896, -8.54846, 0.305751, -5.3046)
+size = Vector3(9.64062, 4.06628, 12.8297)
+
+[node name="NetworkRigidBody3D" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.488957, 3.22122, -4.8859)
+physics_material_override = SubResource("PhysicsMaterial_w8frs")
+continuous_cd = true
+script = ExtResource("3_rsk3g")
+metadata/_custom_type_script = "uid://bklxcdyxgbjg2"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="NetworkRigidBody3D"]
+shape = SubResource("SphereShape3D_w8frs")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="NetworkRigidBody3D"]
+mesh = SubResource("SphereMesh_w8frs")
+
+[node name="RollbackSynchronizer" type="Node" parent="NetworkRigidBody3D" node_paths=PackedStringArray("root")]
+script = ExtResource("4_0352p")
+root = NodePath("..")
+enable_prediction = true
+state_properties = Array[String]([":physics_state"])
+enable_input_broadcast = false
+metadata/_custom_type_script = "uid://d350u8evihs1u"
+
+[node name="TickInterpolator" type="Node" parent="NetworkRigidBody3D" node_paths=PackedStringArray("root")]
+script = ExtResource("5_1f0us")
+root = NodePath("..")
+properties = Array[String]([":global_transform"])
+metadata/_custom_type_script = "uid://dour8fehaaugp"
+
+[node name="NetworkArea3D" type="Area3D" parent="."]
+script = ExtResource("6_qubst")
+metadata/_custom_type_script = "uid://dki86bwoc4t5k"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="NetworkArea3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.44993, 1.60984, 1.42591)
+shape = SubResource("BoxShape3D_2r41h")
+debug_color = Color(0.255852, 0.63481, 0, 1)
+
+[connection signal="rollback_body_entered" from="NetworkArea3D" to="." method="_on_network_area_3d_rollback_body_entered"]
+[connection signal="rollback_body_exited" from="NetworkArea3D" to="." method="_on_network_area_3d_rollback_body_exited"]

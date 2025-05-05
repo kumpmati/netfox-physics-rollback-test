@@ -1,0 +1,104 @@
+[gd_scene load_steps=10 format=3 uid="uid://dv5necxbqvang"]
+
+[ext_resource type="Script" uid="uid://tthe5s5wwhra" path="res://scripts/level_2d.gd" id="1_p53na"]
+[ext_resource type="Script" uid="uid://bcc28dvk0pufe" path="res://addons/netfox.extras/physics/rapier_driver_2d.gd" id="3_3k6te"]
+[ext_resource type="Texture2D" uid="uid://eaa2ty5pvics" path="res://icon.svg" id="3_w8p7c"]
+[ext_resource type="Script" uid="uid://e5ug4iswfl61" path="res://scripts/network_rigid_body_2d.gd" id="4_mrcja"]
+[ext_resource type="Script" uid="uid://dour8fehaaugp" path="res://addons/netfox/tick-interpolator.gd" id="5_dburh"]
+[ext_resource type="Script" uid="uid://d350u8evihs1u" path="res://addons/netfox/rollback/rollback-synchronizer.gd" id="5_mrcja"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_w8p7c"]
+size = Vector2(464, 20)
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_3k6te"]
+friction = 0.83
+bounce = 0.94
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3k6te"]
+size = Vector2(54, 54)
+
+[node name="Level2D" type="Node2D"]
+script = ExtResource("1_p53na")
+
+[node name="RapierDriver2D" type="Node" parent="."]
+script = ExtResource("3_3k6te")
+
+[node name="Label" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("uid://dadkg5215t8ul")
+spawn_path = NodePath("..")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(0, -222)
+shape = SubResource("RectangleShape2D_w8p7c")
+
+[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D"]
+position = Vector2(0, -223)
+scale = Vector2(3.5625, 0.125)
+texture = ExtResource("3_w8p7c")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(0, 223)
+shape = SubResource("RectangleShape2D_w8p7c")
+
+[node name="Sprite2D2" type="Sprite2D" parent="StaticBody2D"]
+position = Vector2(0, 222)
+scale = Vector2(3.5625, 0.125)
+texture = ExtResource("3_w8p7c")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(-245.999, -1.99998)
+rotation = 1.57079
+shape = SubResource("RectangleShape2D_w8p7c")
+
+[node name="Sprite2D3" type="Sprite2D" parent="StaticBody2D"]
+position = Vector2(-245.999, -2.99998)
+rotation = 1.57079
+scale = Vector2(3.5625, 0.125)
+texture = ExtResource("3_w8p7c")
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(249.001, -1.99998)
+rotation = 1.57079
+shape = SubResource("RectangleShape2D_w8p7c")
+
+[node name="Sprite2D4" type="Sprite2D" parent="StaticBody2D"]
+position = Vector2(249.001, -2.99998)
+rotation = 1.57079
+scale = Vector2(3.5625, 0.125)
+texture = ExtResource("3_w8p7c")
+
+[node name="NetworkRigidBody2D" type="RigidBody2D" parent="."]
+position = Vector2(113, -103)
+rotation = -0.302686
+physics_material_override = SubResource("PhysicsMaterial_3k6te")
+script = ExtResource("4_mrcja")
+metadata/_custom_type_script = "uid://c8hw7ol53m55g"
+
+[node name="Sprite2D" type="Sprite2D" parent="NetworkRigidBody2D"]
+scale = Vector2(0.421875, 0.421875)
+texture = ExtResource("3_w8p7c")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="NetworkRigidBody2D"]
+shape = SubResource("RectangleShape2D_3k6te")
+
+[node name="RollbackSynchronizer" type="Node" parent="NetworkRigidBody2D" node_paths=PackedStringArray("root")]
+script = ExtResource("5_mrcja")
+root = NodePath("..")
+enable_prediction = true
+state_properties = Array[String]([":physics_state"])
+enable_input_broadcast = false
+metadata/_custom_type_script = "uid://d350u8evihs1u"
+
+[node name="TickInterpolator" type="Node" parent="NetworkRigidBody2D" node_paths=PackedStringArray("root")]
+script = ExtResource("5_dburh")
+root = NodePath("..")
+properties = Array[String]([":global_transform"])
+metadata/_custom_type_script = "uid://dour8fehaaugp"

@@ -1,0 +1,37 @@
+[gd_scene load_steps=7 format=3 uid="uid://dadkg5215t8ul"]
+
+[ext_resource type="Script" uid="uid://dj6tm0jvyspvu" path="res://scripts/player_2d.gd" id="1_kjwfp"]
+[ext_resource type="Script" uid="uid://c8i18vycny5cn" path="res://scripts/player-input-2d.gd" id="2_0eb65"]
+[ext_resource type="Texture2D" uid="uid://eaa2ty5pvics" path="res://icon.svg" id="2_sxvnq"]
+[ext_resource type="Script" uid="uid://d350u8evihs1u" path="res://addons/netfox/rollback/rollback-synchronizer.gd" id="3_fd0ad"]
+[ext_resource type="Script" uid="uid://dour8fehaaugp" path="res://addons/netfox/tick-interpolator.gd" id="4_0eb65"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_dm5ha"]
+size = Vector2(38, 38)
+
+[node name="Player2D" type="CharacterBody2D"]
+script = ExtResource("1_kjwfp")
+
+[node name="Input" type="Node" parent="."]
+script = ExtResource("2_0eb65")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.296875, 0.296875)
+texture = ExtResource("2_sxvnq")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_dm5ha")
+
+[node name="RollbackSynchronizer" type="Node" parent="." node_paths=PackedStringArray("root")]
+script = ExtResource("3_fd0ad")
+root = NodePath("..")
+state_properties = Array[String]([":global_transform", ":velocity"])
+input_properties = Array[String](["Input:move_wish_dir"])
+enable_input_broadcast = false
+metadata/_custom_type_script = "uid://d350u8evihs1u"
+
+[node name="TickInterpolator" type="Node" parent="." node_paths=PackedStringArray("root")]
+script = ExtResource("4_0eb65")
+root = NodePath("..")
+properties = Array[String]([":global_transform"])
+metadata/_custom_type_script = "uid://dour8fehaaugp"
